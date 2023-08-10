@@ -1,4 +1,4 @@
-package com.example.wanted.user.security;
+package com.example.wanted.security;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
