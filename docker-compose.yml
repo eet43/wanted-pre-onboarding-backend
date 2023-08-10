@@ -1,0 +1,38 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: wanted
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+      TZ: 'Asia/Seoul'
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./mysql-init.d:/docker-entrypoint-initdb.d
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    networks:
+      - my-network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    container_name: wanted
+    environment:
+      SPRING_DATASOURCE_USERNAME : root
+      SPRING_DATASOURCE_PASSWORD : 1234
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: bridge
+
+
