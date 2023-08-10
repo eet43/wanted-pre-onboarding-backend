@@ -3,7 +3,6 @@ package com.example.wanted.user.adapter.in.web;
 import com.example.wanted.common.response.CustomResponse;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
 import com.example.wanted.user.application.port.in.AuthUseCase;
-import com.example.wanted.user.application.port.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
