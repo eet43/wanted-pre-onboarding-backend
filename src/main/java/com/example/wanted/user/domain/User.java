@@ -1,5 +1,7 @@
 package com.example.wanted.user.domain;
 
+import com.example.wanted.common.response.CodeSet;
+import com.example.wanted.common.response.CustomException;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,9 +14,9 @@ public class User {
     private String password;
     public void validate() {
         if (!this.email.contains("@")) {
-            throw new IllegalArgumentException("제대로된 이메일 형식이 아닙니다.");
+            throw new CustomException(CodeSet.INVALID_EMAIL_FORMAT);
         } else if (this.password.replace(" ", "").length() < 8) {
-            throw new IllegalArgumentException("비밀번호를 8자 이상으로 입력해주세요(공백 제거)");
+            throw new CustomException(CodeSet.INVALID_PW_FORMAT);
         }
     };
 
