@@ -1,7 +1,7 @@
 package com.example.wanted.user.application.port.out;
 
-import com.example.wanted.user.adapter.out.persistence.UserEntity;
+import com.example.wanted.user.domain.User;
 
 public interface ChangeUserPort {
-    void save(UserEntity entity);
+    void save(User entity);
 }
