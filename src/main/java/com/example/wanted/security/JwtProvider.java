@@ -43,6 +43,10 @@ public class JwtProvider implements AuthenticationProvider {
         return token.getClaims();
     }
 
+    public Long getIdFromToken(String token) {
+        DecodedJWT verifiedToken = validateToken(token);
+        return verifiedToken.getClaim("userId").asLong();
+    }
     public String getEmailFromToken(String token) {
         DecodedJWT verifiedToken = validateToken(token);
         return verifiedToken.getClaim("email").asString();
