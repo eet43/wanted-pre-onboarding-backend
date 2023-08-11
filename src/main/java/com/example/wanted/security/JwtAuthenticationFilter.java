@@ -39,12 +39,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             Long userId = jwtProvider.getIdFromToken(jwt);
             String email = jwtProvider.getEmailFromToken(jwt);
 
-            Map<String, Object> userDetails = new HashMap<>();
-            userDetails.put("userId", userId);
-            userDetails.put("email", email);
+            UserInfo userInfo = new UserInfo(userId, email);
 
             Authentication authentication = jwtProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDetails, ""));
+                    new UsernamePasswordAuthenticationToken(userInfo, ""));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
