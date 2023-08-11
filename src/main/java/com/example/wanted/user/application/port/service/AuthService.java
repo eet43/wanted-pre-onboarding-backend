@@ -12,9 +12,6 @@ import com.example.wanted.user.application.port.out.LoadUserPort;
 import com.example.wanted.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +32,6 @@ public class AuthService implements AuthUseCase {
         loadUserPort.checkEmail(request.email());
 
         User user = request.toDomain();
-        user.validate();
         user.encodePw(passwordEncoder);
 
         changeUserPort.save(user);

@@ -22,6 +22,7 @@ public class AuthController {
 
     @PostMapping("/sign")
     public CustomResponse signUp(@RequestBody SignUpRequest request) {
+        request.validate();
         authUseCase.signUp(request);
 
         return CustomResponse.success();
@@ -29,6 +30,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public CustomResponse<LoginToken> login(@RequestBody LoginRequest request) {
+        request.validate();
         LoginToken token = authUseCase.login(request);
 
         return CustomResponse.success(token);

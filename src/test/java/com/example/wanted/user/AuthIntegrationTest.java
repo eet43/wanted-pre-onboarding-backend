@@ -1,10 +1,5 @@
 package com.example.wanted.user;
 
-import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
-import com.example.wanted.user.adapter.out.persistence.UserEntity;
-import com.example.wanted.user.adapter.out.persistence.UserRepository;
-import com.example.wanted.user.application.port.service.AuthService;
-import com.example.wanted.user.domain.User;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

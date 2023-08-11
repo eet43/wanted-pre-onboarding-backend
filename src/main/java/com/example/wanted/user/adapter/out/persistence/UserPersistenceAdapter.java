@@ -3,16 +3,12 @@ package com.example.wanted.user.adapter.out.persistence;
 import com.example.wanted.common.response.CodeSet;
 import com.example.wanted.common.response.CustomException;
 import com.example.wanted.common.response.FilterException;
-import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
 import com.example.wanted.user.application.port.out.ChangeUserPort;
 import com.example.wanted.user.application.port.out.LoadUserPort;
 import com.example.wanted.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
