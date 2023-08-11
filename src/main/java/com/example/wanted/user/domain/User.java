@@ -19,8 +19,12 @@ public class User {
             throw new CustomException(CodeSet.INVALID_PW_FORMAT);
         }
     };
-
     public void encodePw(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+    public void verifyPw(PasswordEncoder passwordEncoder, String password) {
+        if(!passwordEncoder.matches(password, this.password)) {
+            throw new CustomException(CodeSet.INVALID_PASSWORD);
+        }
     }
 }

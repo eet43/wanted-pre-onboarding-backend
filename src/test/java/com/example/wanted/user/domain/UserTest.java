@@ -44,7 +44,6 @@ class UserTest {
         //given
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = User.builder()
-                .email("1234@gmail.com")
                 .password("121345678")
                 .build();
 
@@ -53,6 +52,21 @@ class UserTest {
 
         //then
         assertTrue(passwordEncoder.matches("121345678", user.getPassword()));
+    }
+
+    @Test
+    void 비밀번호_확인() throws Exception {
+        //given
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User user = User.builder()
+                .password("12345678")
+                .build();
+        user.encodePw(passwordEncoder);
+
+        assertDoesNotThrow(() -> user.verifyPw(passwordEncoder, "12345678"));
+        assertThatThrownBy(() -> user.verifyPw(passwordEncoder, "11111111"))
+                .isInstanceOf(CustomException.class)
+                .hasFieldOrPropertyWithValue("code", CodeSet.INVALID_PASSWORD);
 
     }
 }

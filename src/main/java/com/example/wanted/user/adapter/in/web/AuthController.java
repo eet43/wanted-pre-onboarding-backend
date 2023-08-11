@@ -1,6 +1,8 @@
 package com.example.wanted.user.adapter.in.web;
 
 import com.example.wanted.common.response.CustomResponse;
+import com.example.wanted.user.adapter.in.web.dto.LoginRequest;
+import com.example.wanted.user.adapter.in.web.dto.LoginToken;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
 import com.example.wanted.user.application.port.in.AuthUseCase;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,13 @@ public class AuthController {
         authUseCase.signUp(request);
 
         return CustomResponse.success();
+    }
+
+    @PostMapping("/login")
+    public CustomResponse<LoginToken> login(@RequestBody LoginRequest request) {
+        LoginToken token = authUseCase.login(request);
+
+        return CustomResponse.success(token);
     }
 
 }

@@ -1,24 +1,39 @@
 package com.example.wanted.user.application.port.service;
 
+import com.example.wanted.common.response.CustomException;
+import com.example.wanted.security.JwtProvider;
+import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
 import com.example.wanted.user.adapter.in.web.dto.LoginRequest;
+import com.example.wanted.user.adapter.in.web.dto.LoginToken;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
 import com.example.wanted.user.application.port.in.AuthUseCase;
 import com.example.wanted.user.application.port.out.ChangeUserPort;
+import com.example.wanted.user.application.port.out.LoadUserPort;
 import com.example.wanted.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
+    private final LoadUserPort loadUserPort;
     private final ChangeUserPort changeUserPort;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void signUp(SignUpRequest request) {
+        loadUserPort.checkEmail(request.email());
+
         User user = request.toDomain();
         user.validate();
         user.encodePw(passwordEncoder);
@@ -27,7 +42,21 @@ public class AuthService implements AuthUseCase {
     }
 
     @Override
-    public void login(LoginRequest request) {
+    public LoginToken login(LoginRequest request) {
+        User findUser = loadUserPort.findUser(request.email());
+        findUser.verifyPw(passwordEncoder, request.password());
 
+        return createToken(findUser);
     }
+    private LoginToken createToken(User findUser) {
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("userId", findUser.getId());
+        userInfo.put("email", findUser.getEmail());
+
+        String accessToken = jwtProvider.generateToken(userInfo);
+        String refreshToken = jwtProvider.generateRefreshToken(userInfo);
+
+        return new LoginToken(accessToken, refreshToken);
+    }
+
 }
