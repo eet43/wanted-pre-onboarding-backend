@@ -1,5 +1,7 @@
 package com.example.wanted.board.adapter.in.web;
 
+import com.example.wanted.board.adapter.out.persistence.BoardEntity;
+import com.example.wanted.board.adapter.out.persistence.BoardRepository;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
 import com.example.wanted.user.adapter.out.persistence.UserEntity;
 import com.example.wanted.user.adapter.out.persistence.UserRepository;
@@ -15,14 +17,22 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 class BoardIntegrationTest {
     @Autowired
@@ -30,6 +40,9 @@ class BoardIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BoardRepository boardRepository;
 
     @BeforeEach
     void setup() {
@@ -62,5 +75,34 @@ class BoardIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is("0000")))
                 .andExpect(jsonPath("$.message", is("OK")));
+    }
+
+    @Test
+    void 게시글_조회() throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"123456@gmail.com\",\"password\":\"123456789\"}"))
+                .andReturn().getResponse();
+
+        String responseBody = response.getContentAsString();
+        JSONObject json = new JSONObject(responseBody);
+        JSONObject result = json.getJSONObject("result");
+        String accessToken = result.getString("accessToken");
+
+        List<BoardEntity> entityList = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> BoardEntity.builder().title(("test" + i)).build()).toList();
+        boardRepository.saveAll(entityList);
+
+        mockMvc.perform(get("/board/all")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("page", "1")
+                        .param("size", "5"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.code", is("0000")))
+                        .andExpect(jsonPath("$.message", is("OK")))
+                        .andExpect(jsonPath("$.result", hasSize(5)))
+                        .andExpect(jsonPath("$.result[0].title", is("test6")))
+                        .andExpect(jsonPath("$.result[4].title", is("test10")));
     }
 }
