@@ -1,6 +1,7 @@
 package com.example.wanted.board.adapter.in.web;
 
 import com.example.wanted.board.adapter.in.web.dto.CreateBoardRequest;
+import com.example.wanted.board.adapter.in.web.dto.ModifyBoardRequest;
 import com.example.wanted.board.application.port.in.BoardUseCase;
 import com.example.wanted.board.domain.Board;
 import com.example.wanted.common.response.CustomResponse;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +43,10 @@ public class BoardController {
     public CustomResponse<Board> selectAll(@PathVariable Long boardId) {
         Board data = boardUseCase.select(boardId);
         return CustomResponse.success(data);
+    }
+    @PutMapping()
+    public CustomResponse modify(@RequestBody ModifyBoardRequest request, @AuthenticationPrincipal CustomUserDetails userInfo) {
+        boardUseCase.modify(request, userInfo);
+        return CustomResponse.success();
     }
 }
