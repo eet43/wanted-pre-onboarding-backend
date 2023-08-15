@@ -30,4 +30,9 @@ public class BoardService implements BoardUseCase {
     public List<Board> selectAll(Pageable pageable) {
         return loadBoardPort.findAll(pageable);
     }
+
+    @Override
+    public Board select(Long boardId) {
+        return loadBoardPort.findOne(boardId);
+    }
 }

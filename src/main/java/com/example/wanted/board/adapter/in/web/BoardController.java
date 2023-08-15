@@ -36,4 +36,10 @@ public class BoardController {
 
         return CustomResponse.success(data);
     }
+
+    @GetMapping("/{boardId}")
+    public CustomResponse<Board> selectAll(@PathVariable Long boardId) {
+        Board data = boardUseCase.select(boardId);
+        return CustomResponse.success(data);
+    }
 }

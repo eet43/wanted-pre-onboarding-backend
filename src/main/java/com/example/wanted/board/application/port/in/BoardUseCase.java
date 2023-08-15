@@ -10,4 +10,5 @@ import java.util.List;
 public interface BoardUseCase {
     void write(CreateBoardRequest request, CustomUserDetails userInfo);
     List<Board> selectAll(Pageable pageable);
+    Board select(Long boardId);
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface LoadBoardPort {
     List<Board> findAll(Pageable pageable);
+    Board findOne(Long boardId);
 }

@@ -13,7 +13,8 @@ public enum CodeSet {
     INVALID_TOKEN("1006", "유효하지 않은 토큰입니다."),
     INVALID_SIGNATURE("1007", "잘못된 JWT 서명입니다."),
     EXPIRED_TOKEN("1008", "만료된 JWT 토큰입니다."),
-    UNSUPPORTED_TOKEN("1009", "지원되지 않는 JWT 토큰입니다.");
+    UNSUPPORTED_TOKEN("1009", "지원되지 않는 JWT 토큰입니다."),
+    INVALID_BOARD("2001", "해당 게시글을 찾을 수 없습니다.");
 
     private final String code;
     private final String message;
