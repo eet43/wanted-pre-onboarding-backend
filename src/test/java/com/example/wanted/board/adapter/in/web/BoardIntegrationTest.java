@@ -26,8 +26,7 @@ import java.util.stream.IntStream;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,5 +103,57 @@ class BoardIntegrationTest {
                         .andExpect(jsonPath("$.result", hasSize(5)))
                         .andExpect(jsonPath("$.result[0].title", is("test6")))
                         .andExpect(jsonPath("$.result[4].title", is("test10")));
+    }
+
+    @Test
+    void 게시글_수정_조회_삭제_테스트() throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"123456@gmail.com\",\"password\":\"123456789\"}"))
+                .andReturn().getResponse();
+
+        String responseBody = response.getContentAsString();
+        JSONObject json = new JSONObject(responseBody);
+        JSONObject result = json.getJSONObject("result");
+        String accessToken = result.getString("accessToken");
+
+        //게시글 생성
+        MockHttpServletResponse createBoardResponse = mockMvc.perform(post("/board")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"test\",\"content\":\"example post\"}"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.code", is("0000")))
+                        .andExpect(jsonPath("$.message", is("OK")))
+                        .andReturn().getResponse();
+        String createBoardResponseBody = createBoardResponse.getContentAsString();
+        JSONObject boardJson = new JSONObject(createBoardResponseBody);
+        Long boardId = boardJson.getJSONObject("result").getLong("boardId");
+
+        //게시글 수정
+        mockMvc.perform(put("/board/{boardId}", boardId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"change\",\"content\":\"change post\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is("0000")))
+                .andExpect(jsonPath("$.message", is("OK")));
+
+        //게시글 조회
+        mockMvc.perform(get("/board/{boardId}", boardId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is("0000")))
+                .andExpect(jsonPath("$.message", is("OK")))
+                .andExpect(jsonPath("$.result.title", is("change")));
+
+        //게시글 삭제
+        mockMvc.perform(delete("/board/{boardId}", boardId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is("0000")))
+                .andExpect(jsonPath("$.message", is("OK")));
     }
 }

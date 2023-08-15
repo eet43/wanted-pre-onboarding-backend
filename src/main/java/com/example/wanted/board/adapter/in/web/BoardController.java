@@ -1,6 +1,7 @@
 package com.example.wanted.board.adapter.in.web;
 
 import com.example.wanted.board.adapter.in.web.dto.CreateBoardRequest;
+import com.example.wanted.board.adapter.in.web.dto.CreateBoardResponse;
 import com.example.wanted.board.adapter.in.web.dto.ModifyBoardRequest;
 import com.example.wanted.board.application.port.in.BoardUseCase;
 import com.example.wanted.board.domain.Board;
@@ -27,8 +28,8 @@ public class BoardController {
 
     @PostMapping()
     public CustomResponse write(@RequestBody CreateBoardRequest request, @AuthenticationPrincipal CustomUserDetails userInfo) {
-        boardUseCase.write(request, userInfo);
-        return CustomResponse.success();
+        CreateBoardResponse data = boardUseCase.write(request, userInfo);
+        return CustomResponse.success(data);
     }
 
     @GetMapping("/all")
@@ -44,9 +45,15 @@ public class BoardController {
         Board data = boardUseCase.select(boardId);
         return CustomResponse.success(data);
     }
-    @PutMapping()
-    public CustomResponse modify(@RequestBody ModifyBoardRequest request, @AuthenticationPrincipal CustomUserDetails userInfo) {
-        boardUseCase.modify(request, userInfo);
+    @PutMapping("/{boardId}")
+    public CustomResponse modify(@PathVariable Long boardId, @RequestBody ModifyBoardRequest request, @AuthenticationPrincipal CustomUserDetails userInfo) {
+        boardUseCase.modify(boardId, request, userInfo);
+        return CustomResponse.success();
+    }
+
+    @DeleteMapping("/{boardId}")
+    public CustomResponse delete(@PathVariable Long boardId, @AuthenticationPrincipal CustomUserDetails userInfo) {
+        boardUseCase.delete(boardId, userInfo);
         return CustomResponse.success();
     }
 }

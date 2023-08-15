@@ -23,10 +23,17 @@ public class BoardPersistenceAdapter implements LoadBoardPort, ChangeBoardPort {
     private final BoardRepository boardRepository;
     private final BoardMapper boardMapper;
     @Override
-    public void save(Board board) {
+    public Long save(Board board) {
         BoardEntity entity = boardMapper.toEntity(board);
 
-        boardRepository.save(entity);
+        return boardRepository.save(entity).getId();
+    }
+
+    @Override
+    public void delete(Board board) {
+        BoardEntity entity = boardMapper.toEntity(board);
+
+        boardRepository.delete(entity);
     }
 
     @Override

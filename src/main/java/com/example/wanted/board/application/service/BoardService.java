@@ -1,6 +1,7 @@
 package com.example.wanted.board.application.service;
 
 import com.example.wanted.board.adapter.in.web.dto.CreateBoardRequest;
+import com.example.wanted.board.adapter.in.web.dto.CreateBoardResponse;
 import com.example.wanted.board.adapter.in.web.dto.ModifyBoardRequest;
 import com.example.wanted.board.application.port.in.BoardUseCase;
 import com.example.wanted.board.application.port.out.ChangeBoardPort;
@@ -27,10 +28,11 @@ public class BoardService implements BoardUseCase {
     private final ChangeBoardPort changeBoardPort;
     @Override
     @Transactional
-    public void write(CreateBoardRequest request, CustomUserDetails userInfo) {
+    public CreateBoardResponse write(CreateBoardRequest request, CustomUserDetails userInfo) {
         Board board = request.toDomain(userInfo.getUser().getId());
 
-        changeBoardPort.save(board);
+        Long boardId = changeBoardPort.save(board);
+        return new CreateBoardResponse(boardId);
     }
     @Override
     public List<Board> selectAll(Pageable pageable) {
@@ -44,12 +46,24 @@ public class BoardService implements BoardUseCase {
 
     @Override
     @Transactional
-    public void modify(ModifyBoardRequest request, CustomUserDetails userInfo) {
+    public void modify(Long boardId, ModifyBoardRequest request, CustomUserDetails userInfo) {
         User accessUser = userInfo.getUser();
-        Board board = loadBoardPort.findOne(accessUser.getId());
+        Board board = loadBoardPort.findOne(boardId);
 
         checkAccess(accessUser.getId(), board.getWriterId());
         board.modify(request.title(), request.content());
+
+        changeBoardPort.save(board);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long boardId, CustomUserDetails userInfo) {
+        User accessUser = userInfo.getUser();
+        Board board = loadBoardPort.findOne(boardId);
+
+        checkAccess(accessUser.getId(), board.getWriterId());
+        changeBoardPort.delete(board);
     }
 
     private void checkAccess(Long userId, Long writerId) {
