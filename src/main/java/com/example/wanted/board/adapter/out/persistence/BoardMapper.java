@@ -22,6 +22,7 @@ public class BoardMapper {
     public BoardEntity toEntity(Board domain) {
         return BoardEntity.builder()
                 .id(domain.getId())
+                .writerId(domain.getWriterId())
                 .title(domain.getTitle())
                 .content(domain.getContent())
                 .createdTime(domain.getCreatedTime())

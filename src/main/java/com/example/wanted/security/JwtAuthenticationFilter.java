@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,48 +13,38 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private final JwtProvider jwtProvider;
-
+    private final TokenProvider jwtProvider;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String jwt = resolveToken(httpServletRequest);
-        String requestURI = httpServletRequest.getRequestURI();
-        log.debug("url : " + requestURI);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        final String token = getParseJwt(request.getHeader(AUTHORIZATION_HEADER));
 
-        if (StringUtils.hasText(jwt) && !jwtProvider.isTokenExpired(jwt)) {
-            Long userId = jwtProvider.getIdFromToken(jwt);
-            String email = jwtProvider.getEmailFromToken(jwt);
-
-            UserInfo userInfo = new UserInfo(userId, email);
-
-            Authentication authentication = jwtProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(userInfo, ""));
+        if (token != null && jwtProvider.validateToken(token)) {
+//            Long idFromToken = jwtProvider.getIdFromToken()
+            Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(request, response);
     }
 
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    private String getParseJwt(final String headerAuth) {
+
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer")) {
+            return headerAuth.substring(7);
         }
+
         return null;
     }
 }

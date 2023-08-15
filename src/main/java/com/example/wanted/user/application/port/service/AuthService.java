@@ -1,7 +1,7 @@
 package com.example.wanted.user.application.port.service;
 
 import com.example.wanted.common.response.CustomException;
-import com.example.wanted.security.JwtProvider;
+import com.example.wanted.security.TokenProvider;
 import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
 import com.example.wanted.user.adapter.in.web.dto.LoginRequest;
 import com.example.wanted.user.adapter.in.web.dto.LoginToken;
@@ -25,7 +25,7 @@ public class AuthService implements AuthUseCase {
     private final LoadUserPort loadUserPort;
     private final ChangeUserPort changeUserPort;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final TokenProvider jwtProvider;
 
     @Override
     public void signUp(SignUpRequest request) {
@@ -45,12 +45,9 @@ public class AuthService implements AuthUseCase {
         return createToken(findUser);
     }
     private LoginToken createToken(User findUser) {
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("userId", findUser.getId());
-        userInfo.put("email", findUser.getEmail());
 
-        String accessToken = jwtProvider.generateToken(userInfo);
-        String refreshToken = jwtProvider.generateRefreshToken(userInfo);
+        String accessToken = jwtProvider.generateAccessToken(findUser);
+        String refreshToken = jwtProvider.generateRefreshToken(findUser);
 
         return new LoginToken(accessToken, refreshToken);
     }

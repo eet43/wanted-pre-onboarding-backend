@@ -1,6 +1,6 @@
 package com.example.wanted.user.application.port.service;
 
-import com.example.wanted.security.JwtProvider;
+import com.example.wanted.security.TokenProvider;
 import com.example.wanted.user.adapter.in.web.dto.LoginRequest;
 import com.example.wanted.user.adapter.in.web.dto.LoginToken;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@Import({ChangeUserPort.class, LoadUserPort.class, JwtProvider.class, PasswordEncoder.class, AuthService.class})
+@Import({ChangeUserPort.class, LoadUserPort.class, TokenProvider.class, PasswordEncoder.class, AuthService.class})
 class AuthServiceTest {
     @MockBean
     ChangeUserPort changeUserPort;
@@ -29,7 +29,7 @@ class AuthServiceTest {
     LoadUserPort loadUserPort;
 
     @MockBean
-    JwtProvider jwtProvider;
+    TokenProvider jwtProvider;
 
     @MockBean
     PasswordEncoder passwordEncoder;
@@ -60,8 +60,8 @@ class AuthServiceTest {
 
         when(loadUserPort.findUser(request.email())).thenReturn(user);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        when(jwtProvider.generateToken(anyMap())).thenReturn("accessToken");
-        when(jwtProvider.generateRefreshToken(anyMap())).thenReturn("refreshToken");
+        when(jwtProvider.generateAccessToken(user)).thenReturn("accessToken");
+        when(jwtProvider.generateRefreshToken(user)).thenReturn("refreshToken");
 
         //when
         LoginToken loginToken = authService.login(request);
