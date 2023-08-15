@@ -36,8 +36,8 @@ class BoardIntegrationTest {
         // 회원 정보 생성 코드
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserEntity user = UserEntity.builder()
-                .email("1234@gmail.com")
-                .password(passwordEncoder.encode("12345678"))
+                .email("123456@gmail.com")
+                .password(passwordEncoder.encode("123456789"))
                 .build();
         userRepository.save(user);
     }
@@ -46,7 +46,7 @@ class BoardIntegrationTest {
     void 게시글_생성() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"1234@gmail.com\",\"password\":\"12345678\"}"))
+                        .content("{\"email\":\"123456@gmail.com\",\"password\":\"123456789\"}"))
                 .andReturn().getResponse();
 
         String responseBody = response.getContentAsString();
