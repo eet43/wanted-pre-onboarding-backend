@@ -2,10 +2,8 @@ package com.example.wanted.board.adapter.in.web;
 
 import com.example.wanted.board.adapter.out.persistence.BoardEntity;
 import com.example.wanted.board.adapter.out.persistence.BoardRepository;
-import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
 import com.example.wanted.user.adapter.out.persistence.UserEntity;
 import com.example.wanted.user.adapter.out.persistence.UserRepository;
-import com.example.wanted.user.domain.User;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,13 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
