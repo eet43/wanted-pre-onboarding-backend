@@ -3,6 +3,7 @@ package com.example.wanted.board.application.service;
 import com.example.wanted.board.adapter.in.web.dto.CreateBoardRequest;
 import com.example.wanted.board.application.port.in.BoardUseCase;
 import com.example.wanted.board.application.port.out.ChangeBoardPort;
+import com.example.wanted.board.application.port.out.LoadBoardPort;
 import com.example.wanted.board.domain.Board;
 import com.example.wanted.security.UserInfo;
 import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
@@ -17,6 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardService implements BoardUseCase {
+    private final LoadBoardPort loadBoardPort;
     private final ChangeBoardPort changeBoardPort;
     @Override
     public void write(CreateBoardRequest request, CustomUserDetails userInfo) {
@@ -24,9 +26,8 @@ public class BoardService implements BoardUseCase {
 
         changeBoardPort.save(board);
     }
-
     @Override
     public List<Board> selectAll(Pageable pageable) {
-        return null;
+        return loadBoardPort.findAll(pageable);
     }
 }
