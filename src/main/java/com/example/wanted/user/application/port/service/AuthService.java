@@ -1,8 +1,6 @@
 package com.example.wanted.user.application.port.service;
 
-import com.example.wanted.common.response.CustomException;
-import com.example.wanted.security.TokenProvider;
-import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
+import com.example.wanted.security.JwtProvider;
 import com.example.wanted.user.adapter.in.web.dto.LoginRequest;
 import com.example.wanted.user.adapter.in.web.dto.LoginToken;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
@@ -16,9 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,7 +21,7 @@ public class AuthService implements AuthUseCase {
     private final LoadUserPort loadUserPort;
     private final ChangeUserPort changeUserPort;
     private final PasswordEncoder passwordEncoder;
-    private final TokenProvider jwtProvider;
+    private final JwtProvider jwtProvider;
 
     @Override
     @Transactional

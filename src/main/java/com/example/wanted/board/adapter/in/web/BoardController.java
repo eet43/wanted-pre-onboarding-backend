@@ -6,15 +6,15 @@ import com.example.wanted.board.adapter.in.web.dto.ModifyBoardRequest;
 import com.example.wanted.board.application.port.in.BoardUseCase;
 import com.example.wanted.board.domain.Board;
 import com.example.wanted.common.response.CustomResponse;
-import com.example.wanted.security.UserInfo;
 import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +32,7 @@ public class BoardController {
         return CustomResponse.success(data);
     }
 
+    @ApiResponse(responseCode = "200", description = "게시글 전체 조회", content = @Content(schema = @Schema(implementation = Board.class)))
     @GetMapping("/all")
     public CustomResponse<List<Board>> selectAll(@RequestParam Integer page, @RequestParam Integer size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -40,6 +41,7 @@ public class BoardController {
         return CustomResponse.success(data);
     }
 
+    @ApiResponse(responseCode = "200", description = "게시글 단건 조회", content = @Content(schema = @Schema(implementation = Board.class)))
     @GetMapping("/{boardId}")
     public CustomResponse<Board> selectAll(@PathVariable Long boardId) {
         Board data = boardUseCase.select(boardId);

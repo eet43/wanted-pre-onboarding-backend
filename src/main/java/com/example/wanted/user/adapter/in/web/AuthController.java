@@ -5,6 +5,9 @@ import com.example.wanted.user.adapter.in.web.dto.LoginRequest;
 import com.example.wanted.user.adapter.in.web.dto.LoginToken;
 import com.example.wanted.user.adapter.in.web.dto.SignUpRequest;
 import com.example.wanted.user.application.port.in.AuthUseCase;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +31,7 @@ public class AuthController {
         return CustomResponse.success();
     }
 
+    @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = LoginToken.class)))
     @PostMapping("/login")
     public CustomResponse<LoginToken> login(@RequestBody LoginRequest request) {
         request.validate();

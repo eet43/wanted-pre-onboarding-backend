@@ -23,7 +23,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final String[] WHITE_LIST = {
-            "/auth/**",
+            "/auth/**", "/swagger-ui/**", "/v3/api-docs/**",
     };
 
     @Bean
@@ -37,7 +37,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, TokenProvider jwtProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtProvider jwtProvider) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
