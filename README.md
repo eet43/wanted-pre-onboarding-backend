@@ -41,7 +41,7 @@
 <br>
 
 ## 🌹 데모 영상 링크
-
+https://drive.google.com/drive/folders/1u3do6sx681lW_ZO2OnKCsKIVI3-1NiPq?usp=sharing
 <br>
 
 ## 🔥 구현 방법
