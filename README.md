@@ -33,6 +33,12 @@
     
 <br>
 
+
+## 🍄 아키텍처
+![KakaoTalk_Photo_2023-08-16-20-50-38](https://github.com/eet43/wanted-pre-onboarding-backend/assets/59008469/b51a9549-9417-41ed-9fc4-b52f5a6159c6)
+
+<br>
+
 ## 🔓 ERD
 <img width="508" alt="스크린샷 2023-08-16 오후 3 22 39" src="https://github.com/eet43/wanted-pre-onboarding-backend/assets/59008469/e2b63153-cf08-4605-9c1b-0847e5051ecd">
 
