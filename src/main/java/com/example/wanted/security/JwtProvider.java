@@ -20,11 +20,10 @@ import java.util.Date;
 
 @Component
 public class JwtProvider {
-
-    private static final long TOKEN_VALIDATION_SECOND = 1000L * 60 * 120;
-    private static final long REFRESH_TOKEN_VALIDATION_TIME = 1000L * 60 * 60 * 48;
     @Value("${secure.jwt.issuer}")
     private String ISSUER;
+    private static final long TOKEN_VALIDATION_SECOND = 1000L * 60 * 120;
+    private static final long REFRESH_TOKEN_VALIDATION_TIME = 1000L * 60 * 60 * 48;
     private final Key key;
 
     @Autowired

@@ -1,7 +1,6 @@
 package com.example.wanted.board.domain;
 
-import com.example.wanted.common.response.CodeSet;
-import com.example.wanted.common.response.CustomException;
+
 import lombok.Builder;
 import lombok.Getter;
 

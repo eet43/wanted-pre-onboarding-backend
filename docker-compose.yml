@@ -1,17 +1,16 @@
-version: '3'
+version: '4.1'
 services:
   db:
     image: mysql:8.0
-    container_name: mysql
+    container_name: wanted_db
     environment:
       MYSQL_DATABASE: wanted
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
       TZ: 'Asia/Seoul'
     ports:
-      - "3308:3306"
+      - "3309:3306"
     volumes:
-      - ./mysql-init.d:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/mysql
     command:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_unicode_ci'
@@ -21,14 +20,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       - db
-    container_name: wanted
+    container_name: wanted_app
     environment:
-      SPRING_DATASOURCE_USERNAME : root
-      SPRING_DATASOURCE_PASSWORD : 1234
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3309/wanted?useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_PROFILES_ACTIVE: dev
     networks:
       - my-network
 networks:

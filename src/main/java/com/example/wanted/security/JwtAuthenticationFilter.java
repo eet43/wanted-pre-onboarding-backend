@@ -16,10 +16,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-
     public static final String AUTHORIZATION_HEADER = "Authorization";
-
     private final JwtProvider jwtProvider;
 
     @Override

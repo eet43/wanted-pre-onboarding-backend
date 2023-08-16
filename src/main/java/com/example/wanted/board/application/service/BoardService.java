@@ -9,7 +9,6 @@ import com.example.wanted.board.application.port.out.LoadBoardPort;
 import com.example.wanted.board.domain.Board;
 import com.example.wanted.common.response.CodeSet;
 import com.example.wanted.common.response.CustomException;
-import com.example.wanted.security.UserInfo;
 import com.example.wanted.user.adapter.in.web.dto.CustomUserDetails;
 import com.example.wanted.user.domain.User;
 import lombok.RequiredArgsConstructor;
